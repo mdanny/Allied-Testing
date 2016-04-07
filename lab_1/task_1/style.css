@@ -1,0 +1,30 @@
+div {
+	display: block;
+	height: 100px;
+	width: 100px;
+	border: 1px black solid;
+}
+
+#circle{
+	border-radius: 50%;
+	/*width: 50px;
+	height: 50px;*/
+	/*test comment*/
+
+}
+#rounded_square{
+	border-radius: 10px;
+}
+.blue{
+	background-color:blue;
+}
+
+.red{
+	background-color: red;
+}
+
+.blue_small{
+	background-color:blue;
+	width: 50px;
+	height: 50px;
+}
