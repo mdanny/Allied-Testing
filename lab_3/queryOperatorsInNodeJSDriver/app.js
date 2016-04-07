@@ -1,34 +1,42 @@
 var MongoClient = require('mongodb').MongoClient,
+    express = require('express'),
+    app = express(),
+    engines = require('consolidate'),
     commandLineArgs = require('command-line-args'),
     assert = require('assert');
 
 
 var options = commandLineOptions();
 
+app.engine('html', engines.nunjucks);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
 MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
 
     assert.equal(err, null);
     console.log("Successfully connected to MongoDB.");
 
-    var query = queryDocument(options);
-    var projection = {"_id": 1, "name": 1, "founded_year": 1,
+    app.get('/', function(req, res){
+
+        var query = queryDocument(options);
+        var projection = {"_id": 1, "name": 1, "founded_year": 1,
                       "number_of_employees": 1, "crunchbase_url": 1};
 
-    var cursor = db.collection('companies').find(query, projection);
-    var numMatches = 0;
+        db.collection('companies').find(query, projection).toArray(function(err, docs) {
+            res.render('companies', { 'companies': docs } );
+        });
 
-    cursor.forEach(
-        function(doc) {
-            numMatches = numMatches + 1;
-            console.log( doc );
-        },
-        function(err) {
-            assert.equal(err, null);
-            console.log("Our query was:" + JSON.stringify(query));
-            console.log("Matching documents: " + numMatches);
-            return db.close();
-        }
-    );
+    });
+
+    app.use(function(req, res){
+        res.sendStatus(404);
+    });
+
+    var server = app.listen(3000, function() {
+        var port = server.address().port;
+        console.log('Express server listening on port %s.', port);
+    });
 
 });
 
