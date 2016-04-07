@@ -1,0 +1,12 @@
+<head>
+<style>
+body { font-family: 'Helvetica', 'Arial', sans-serif; }
+</style>
+</head>
+
+<h1>Companies</h1>
+{% for company in companies %}
+  <li><a href={{ company.crunchbase_url }}>{{ company.name }}, {{ company.founded_year }}</a></li>
+{% else %}
+  <li>No companies found.</li>
+{% endfor %}
